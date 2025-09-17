@@ -2,8 +2,9 @@ let screenW = 800;
 let screenH = 1200;
 let fps = 30;
 
-let zin = "GELUID KLEUR BEWEGING SPEELS OPEN CULTUUR TRANSPARANT EERLIJK DIGITAAL ANALOOG PERSOONLIJK SIMPEL EXPERIMENT SAMEN";
+let zin = "GELUID KLEUR BEWEGING VROLIJK OPEN CULTUUR TRANSPARANT EERLIJK DIGITAAL ANALOOG PERSOONLIJK EXPERIMENT SAMEN";
 let woorden;
+let woordCount = 0;
 
 let m;
 let maskImg;
@@ -83,10 +84,13 @@ function setup() {
     }
 
     for (let i = 0; i < rectCountTotal; i += 1) {
+        if (woordCount > woorden.length) { woordCount = 0; }
         let x = margeX + i * step
 
-        let rect = new Rectangle(i, x, height / 2, rectW, rectH, rectH_speed, height - (margeY * 2), 10, font, woorden[int(random(0, woorden.length))]);
+        let rect = new Rectangle(i, x, height / 2, rectW, rectH, rectH_speed, height - (margeY * 2), 10, font, woorden[woordCount]);
         rects.push(rect);
+        woordCount += 1
+
     }
 
 
@@ -124,7 +128,11 @@ function draw() {
         let rectsColoring = rects.filter(r => !r.coloring);
         let rect = rects[int(random(0, rects.length))];
         rect.set_color(int(random(0, 3)));
-        rect.setText(woorden[int(random(0, woorden.length))]);
+        rect.setText(woorden[woordCount]);
+        woordCount += 1;
+        if (woordCount >= woorden.length) {
+            woordCount = 0;
+        }
         playSound();
 
 
@@ -238,8 +246,8 @@ class Rectangle {
         this.maxH = maxH;
         this.coloring = false;
         this.timer = 0;
-        this.c = color(random(50, 150), random(0, 255), random(0, 255));
-        this.c2 = color(random(0, 255), random(200, 255), random(0, 255));
+        this.c = color(random(100, 255), random(30, 255), random(30, 255));
+        this.c2 = color(random(30, 200), random(30, 255), random(100, 255));
         this.strokeWeight = sW;
         this.txt = txt;
         this.font = font;
@@ -252,8 +260,8 @@ class Rectangle {
 
     set_color(i) {
 
-        this.c = color(random(0, 255), random(120, 255), random(0, 255));
-        this.c2 = color(random(50, 255), random(0, 255), random(100, 255));
+        this.c = color(random(100, 255), random(30, 255), random(30, 255));
+        this.c2 = color(random(30, 200), random(30, 255), random(100, 255));
 
 
     }
@@ -292,12 +300,7 @@ class Rectangle {
     }
 
     grow() {
-        /*
-        this.h -= this.s
-        if (this.h < height * 0.1 || this.h > this.maxH) {
-            this.s *= -1;
-        }
-            */
+
         let t = millis() * 0.002;
         let s = sin(t + this.index * 0.1);
         let minSize = height * 0.3;
@@ -306,20 +309,6 @@ class Rectangle {
         this.h = size;
 
 
-    }
-
-
-
-
-
-
-    update() {
-        if (this.coloring == true) {
-            this.timer--;
-            if (this.timer <= 0) {
-                this.coloring = false; // automatisch terug
-            }
-        }
     }
 
 }
